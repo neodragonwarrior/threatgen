@@ -1,0 +1,486 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h1 class="head">THREAT GEN</h1>
+    <style>
+        
+        /* CSS for the stylish heading */
+        .head{
+            font-family: 'Arial', sans-serif; /* You can use a custom font as well */
+            font-size: 48px; /* Large font size */
+            font-weight: bold; /* Make it bold */
+            color: #ff4500; /* A vibrant color */
+            text-align: center; /* Center the text */
+            text-transform: uppercase; /* Uppercase all letters */
+            letter-spacing: 8px; /* Space out the letters */
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+            background: linear-gradient(90deg, #ff4500, #ffcc00); /* Gradient background */
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        input, button, select, textarea {
+            margin: 5px 0;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px auto;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .small-button {
+            padding: 5px;
+            width: 150px;
+        }
+        select {
+            width: auto;
+        }
+        td {
+            background-color: transparent;
+        }
+        .dfd-container, .application-details {
+            margin-top: 20px;
+        }
+        .additional-info {
+            margin-top: 20px;
+        }
+        .threat-generation {
+            margin-top: 20px;
+        }
+        .circle-chart {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            position: relative;
+        }
+        .circle-chart canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .total-count {
+            margin-top: 20px;
+        }
+        .chart {
+            display: flex;
+            justify-content: center;
+        }
+        /* Hide delete button when exporting */
+	@media print {
+    	.delete-button {
+        display: none;
+    	}
+}
+
+    </style>
+</head>
+<body>
+<p><i>Purpose: Threat Gen basically a Threat Generator assist , is ideal for threat modeling activity, where it helps to systematically document potential threats within an application or system.
+<br>It enhances the security assessment process by providing a structured approach to threat identification and reporting.
+</i></p>
+<!-- New section for Application details before DFD -->
+<div class="application-details">
+    <h2>Application Details</h2>
+    <div>
+        <label for="appName">Application Name:</label>
+        <textarea id="appName" rows="1"></textarea>
+    </div>
+    <div>
+        <label for="docOwner">Document Owner:</label>
+        <textarea id="docOwner" rows="1"></textarea>
+    </div>
+    <div>
+        <label for="reviewers">Reviewers:</label>
+        <textarea id="reviewers" rows="2"></textarea>
+    </div>
+    <div>
+        <label for="links">Links (enter URLs):</label>
+        <textarea id="links" rows="2"></textarea>
+    </div>
+</div>
+
+<div>
+    <label for="dfdFile">Upload DFD (JPG/PNG):</label>
+    <input type="file" id="dfdFile" accept=".jpg, .png">
+    <button id="includeDfd" class="small-button">Include DFD</button>
+    <div id="dfdDisplay" class="dfd-container"></div>
+</div>
+
+<div class="users-assets">
+    <div>
+        <label for="usersServices">List of Threat Agents</label>
+        <textarea id="usersServices"></textarea>
+    </div>
+    <div>
+        <label for="assetsToProtect">Assets to Protect</label>
+        <textarea id="assetsToProtect"></textarea>
+    </div>
+</div>
+
+<div class="threat-generation">
+    <h2>Threat Generation</h2>
+    <div>
+        <label for="who">Who:</label>
+        <input type="text" id="who" required>
+    </div>
+    <div>
+        <label for="when">When:</label>
+        <input type="text" id="when" required>
+    </div>
+    <div>
+        <label for="what">What:</label>
+        <input type="text" id="what" required>
+    </div>
+    <div>
+        <label for="why">Why:</label>
+        <input type="text" id="why" required>
+    </div>
+    <div>
+        <label for="where">Where:</label>
+        <input type="text" id="where" required>
+    </div>
+    <label for="cia">Choose CIA:</label>
+    <select id="cia">
+        <option value="">Select</option>
+        <option value="Confidentiality">Confidentiality</option>
+        <option value="Integrity">Integrity</option>
+        <option value="Availability">Availability</option>
+    </select>
+    <button id="generate" class="small-button">Generate</button>
+    <button id="showCount" class="small-button">Show Count</button>
+    <button id="export" class="small-button" style="float: right;">Export</button>
+
+    <table id="threatTable">
+        <thead>
+            <tr>
+                <th>Threat ID</th>
+                <th>Threat</th>
+                <th>Mitigation</th>
+                <th>Severity</th>
+                <th>Comments</th>
+                <th>Resolution</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Threat entries will be appended here -->
+        </tbody>
+    </table>
+
+    <div class="total-count" id="countContainer" style="display:none;">
+        <div id="circleChart"></div>
+        <div id="totalCount"></div>
+    </div>
+
+    <div id="tool-author">
+        <p><a href="https://www.linkedin.com/in/arunkumarvenugopal/" target="_blank">&copythreatgen</a></p>
+    </div>
+
+    <!--author-->
+    <div id="hidn" style="display:none;">
+    <p><a href="https://www.linkedin.com/in/arunkumarvenugopal/" target="_blank">&copythreatgen</a></p>
+    </div>
+</div>
+
+
+<script>
+    let threatIdCounter = 1;
+    let severityCounts = { High: 0, Medium: 0, Low: 0 };
+
+    document.getElementById('includeDfd').onclick = function() {
+        const dfdFile = document.getElementById('dfdFile').files[0];
+        const dfdDisplay = document.getElementById('dfdDisplay');
+        dfdDisplay.innerHTML = ''; // Clear previous content
+
+        if (dfdFile) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                img.style.maxWidth = '100%'; // Adjust as needed
+                dfdDisplay.appendChild(img);
+            };
+            reader.readAsDataURL(dfdFile);
+        } else {
+            dfdDisplay.textContent = 'No DFD provided.';
+        }
+    };
+
+    document.getElementById('generate').onclick = function() {
+        const who = document.getElementById('who').value;
+        const when = document.getElementById('when').value;
+        const what = document.getElementById('what').value;
+        const why = document.getElementById('why').value;
+        const where = document.getElementById('where').value;
+        const cia = document.getElementById('cia').value;
+	
+	
+        if (!who || !when || !what || !why || !where || !cia) {
+            alert('Please fill all fields and select CIA.');
+            return;
+        }
+
+        const threatDescription = `${when} ${who},${what} ${why} ${where}.<br><br><br>impact:${cia}`;
+        const tableBody = document.getElementById('threatTable').getElementsByTagName('tbody')[0];
+        const newRow = tableBody.insertRow();
+        newRow.insertCell(0).textContent = `TGx${threatIdCounter++}`;
+	
+	
+        const threatCell = newRow.insertCell(1);
+        threatCell.innerHTML = threatDescription;
+        threatCell.contentEditable = true;
+
+        const mitigationCell = newRow.insertCell(2);
+        mitigationCell.contentEditable = true;
+
+        const severityCell = newRow.insertCell(3);
+        severityCell.innerHTML = `
+            <select class="severity" onchange="applySeverityColor(this)">
+                <option value="">Select</option>
+                <option value="High" class="severity-high">High</option>
+                <option value="Medium" class="severity-medium">Medium</option>
+                <option value="Low" class="severity-low">Low</option>
+            </select>`;
+
+        const commentsCell = newRow.insertCell(4);
+        commentsCell.contentEditable = true;
+
+        const resolutionCell = newRow.insertCell(5);
+        resolutionCell.innerHTML = `
+            <select class="resolution" onchange="applyResolutionColor(this)">
+                <option value="">Select</option>
+                <option value="Open" class="resolution-open">Open</option>
+                <option value="Closed" class="resolution-closed">Closed</option>
+            </select>`;
+	
+	const deleteButton = document.createElement('button');
+	deleteButton.textContent = 'X';
+	deleteButton.className = 'delete-button';
+	deleteButton.onclick = function() {
+    	tableBody.removeChild(newRow);
+    	updateSeverityCounts();
+        reassignSerialNumbers();
+	};
+   
+
+	// Append the delete button to the new row
+	const deleteCell = newRow.insertCell(6);
+	deleteCell.appendChild(deleteButton);
+        
+	clearThreatInputs();
+        updateSeverityCounts();
+    };
+    
+    function reassignSerialNumbers() {
+            const tableBody = document.getElementById('threatTable').getElementsByTagName('tbody')[0];
+            const rows = tableBody.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].cells[0].textContent = `TGx${i + 1}`; // Update threat ID
+            }
+
+            threatIdCounter = rows.length + 1; // Update counter for next addition
+        }
+   
+    function clearThreatInputs() {
+        document.getElementById('who').value = '';
+        document.getElementById('when').value = '';
+        document.getElementById('what').value = '';
+        document.getElementById('why').value = '';
+        document.getElementById('where').value = '';
+        document.getElementById('cia').selectedIndex = 0;
+    }
+
+    function applySeverityColor(selectElement) {
+        const selectedValue = selectElement.value;
+        const cell = selectElement.parentElement;
+        switch (selectedValue) {
+            case 'High':
+                cell.style.backgroundColor = 'rgba(255, 0, 0, 0.3)'; // Mild red
+                break;
+            case 'Medium':
+                cell.style.backgroundColor = 'rgba(255, 165, 0, 0.3)'; // Mild orange
+                break;
+            case 'Low':
+                cell.style.backgroundColor = 'rgba(211, 211, 211, 0.3)'; // Mild grey
+                break;
+            default:
+                cell.style.backgroundColor = ''; // Default color
+        }
+        updateSeverityCounts();
+    }
+
+    function applyResolutionColor(selectElement) {
+        const selectedValue = selectElement.value;
+        const cell = selectElement.parentElement;
+        switch (selectedValue) {
+            case 'Open':
+                cell.style.backgroundColor = 'rgba(255, 255, 0, 0.3)'; // Mild yellow
+                break;
+            case 'Closed':
+                cell.style.backgroundColor = 'rgba(0, 255, 0, 0.3)'; // Mild green
+                break;
+            default:
+                cell.style.backgroundColor = ''; // Default color
+        }
+    }
+
+    function updateSeverityCounts() {
+        const threatRows = document.querySelectorAll('#threatTable tbody tr');
+        let counts = { high: 0, medium: 0, low: 0 };
+
+        threatRows.forEach(row => {
+            const severitySelect = row.querySelector('.severity');
+            if (severitySelect) {
+                const value = severitySelect.value.toLowerCase();
+                if (counts[value] !== undefined) {
+                    counts[value]++;
+                }
+            }
+        });
+
+        const total = counts.high + counts.medium + counts.low;
+        document.getElementById('totalCount').innerHTML = `
+            <strong>Total:${total}</strong><br>
+            <em>High:${counts.high}     Medium:${counts.medium}     Low:${counts.low}</em>`;
+        const circleChart = document.getElementById('circleChart');
+        circleChart.innerHTML = ''; // Clear previous chart
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 200;
+        canvas.height = 200;
+        circleChart.appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+        const radius = 100;
+        const totalCount = counts.high + counts.medium + counts.low;
+        let startAngle = 0;
+
+        const drawSegment = (value, color) => {
+            const endAngle = startAngle + (value / totalCount) * 2 * Math.PI;
+            ctx.beginPath();
+            ctx.arc(radius, radius, radius, startAngle, endAngle);
+            ctx.lineTo(radius, radius);
+            ctx.fillStyle = color;
+            ctx.fill();
+            startAngle = endAngle;
+        };
+
+        drawSegment(counts.high, 'rgba(255, 0, 0, 0.5)'); // High severity
+        drawSegment(counts.medium, 'rgba(255, 165, 0, 0.5)'); // Medium severity
+        drawSegment(counts.low, 'rgba(211, 211, 211, 0.5)'); // Low severity
+    }
+
+    document.getElementById('showCount').onclick = function() {
+        const countContainer = document.getElementById('countContainer');
+        countContainer.style.display = countContainer.style.display === 'none' ? 'block' : 'none';
+        updateSeverityCounts();
+    };
+
+    document.getElementById('export').onclick = function() {
+        const timestamp = new Date().toLocaleString();
+        const appName = document.getElementById('appName').value; 
+        const docOwner = document.getElementById('docOwner').value; 
+        const reviewers = document.getElementById('reviewers').value; 
+        const links = document.getElementById('links').value.split('\n').map(link => `<a href="${link.trim()}" target="_blank">${link.trim()}</a>`).join('<br>'); 
+
+        const dfdData = document.getElementById('dfdDisplay').innerHTML;
+        const usersServices = document.getElementById('usersServices').value.replace(/\n/g, '<br>'); 
+        const assetsToProtect = document.getElementById('assetsToProtect').value.replace(/\n/g, '<br>');
+
+        let threatRows = '';
+        document.querySelectorAll('#threatTable tbody tr').forEach(row => {
+            const cells = row.getElementsByTagName('td');
+            const severityColor = getComputedStyle(cells[3]).backgroundColor; 
+            const resolutionColor = getComputedStyle(cells[5]).backgroundColor; 
+
+            threatRows += `<tr>
+                <td>${cells[0].textContent}</td>
+                <td>${cells[1].textContent}</td>
+                <td>${cells[2].textContent}</td>
+                <td style="background-color: ${severityColor};">${cells[3].querySelector('select').value}</td>
+                <td>${cells[4].textContent}</td>
+                <td style="background-color: ${resolutionColor};">${cells[5].querySelector('select').value}</td>
+            </tr>`;
+        });
+
+        const circleChartData = document.getElementById('circleChart').querySelector('canvas').toDataURL();
+        const authorInfo = `<p><a href="https://www.linkedin.com/in/arunkumarvenugopal/" target="_blank">&copythreatgen</a></p>
+    				</div>`;
+        const hido = `<p><a href="https://www.linkedin.com/in/arunkumarvenugopal/" target="_blank">&copythreatgen</a></p>
+    				</div>`;
+	
+	const htmlContent = `
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; }
+                    table { border-collapse: collapse; width: 100%; margin: 20px auto; }
+                    th, td { border: 1px solid black; padding: 10px; text-align: left; }
+                    .chart { display: flex; justify-content: center; }
+                </style>
+            </head>
+            <body>
+                <h1>Threat Model Report</h1>
+                <p><strong>&copy;Threat Gen at:</strong> ${timestamp}</p>
+                <h2>Application Details</h2> 
+                <p><strong>Application Name:</strong> ${appName}</p>
+                <p><strong>Document Owner:</strong> ${docOwner}</p>
+                <p><strong>Reviewers:</strong> ${reviewers}</p>
+                <p><strong>Links:</strong><br>${links}</p>
+                <h2>DFD</h2>
+                <div>${dfdData}</div>
+                <h2>Additional Info</h2>
+                <p><strong>List of Threat Agents:</strong><br>${usersServices}</p>
+                <p><strong>Assets to Protect:</strong><br>${assetsToProtect}</p>
+                <h2>Threat Details</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Threat ID</th>
+                            <th>Threat</th>
+                            <th>Mitigation</th>
+                            <th>Severity</th>
+                            <th>Comments</th>
+                            <th>Resolution</th>
+                        </tr>
+                    </thead>
+                    <tbody>${threatRows}</tbody>
+                </table>
+                <h2>summary</h2>
+                <div class="chart">
+                    <img src="${circleChartData}" alt="Severity Chart"/>
+                </div>
+                <div id="totalCount">${document.getElementById('totalCount').innerHTML}</div>
+                ${authorInfo}
+                <!-- ${hido} -->
+	    </body>
+            </html>`;
+
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'threat_report.html';
+        link.click();
+    };
+</script>
+
+</body>
+</html>
+
