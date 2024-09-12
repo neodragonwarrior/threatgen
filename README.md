@@ -46,6 +46,6 @@ index.html: The main file containing the HTML structure and JavaScript logic for
 
 
 Author
-Created by Arun Kumar V (https://www.linkedin.com/in/arunkumarvenugopal/)
+Arun Kumar V (https://www.linkedin.com/in/arunkumarvenugopal/)
 https://github.com/neodragonwarrior/threatgen/
 
