@@ -1,4 +1,3 @@
-Threat Gen 
 Threat Gen is a threat generator tool designed to assist with threat modeling activities. It provides a systematic way to document potential threats for applications or systems, enhancing security assessments through a structured approach to threat identification and reporting.
 
 Features
